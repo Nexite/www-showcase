@@ -5,12 +5,12 @@ import Box, { Flex } from '@codeday/topo/Atom/Box';
 import Skelly from '@codeday/topo/Atom/Skelly';
 import Text, { Link } from '@codeday/topo/Atom/Text';
 import Header, { SiteLogo, Menu } from '@codeday/topo/Organism/Header';
-import Input from '@codeday/topo/Atom/Input/Text';
 import Footer, { CustomLinks } from '@codeday/topo/Organism/Footer';
 import { CodeDay } from '@codeday/topo/Atom/Logo';
 import Button from '@codeday/topo/Atom/Button';
 
 import UiSearch from '@codeday/topocons/Icon/UiSearch';
+import Autocomplete from './AutocompleteInput';
 
 export default function Page({
   children, title, darkHeader, slug, ...props
@@ -18,10 +18,9 @@ export default function Page({
   const [session, loading] = useSession();
 
   const [search, setSearch] = useState();
+  console.log(search)
   const menuItems = !session ? (
-
     <Menu d="inline-flex">
-
       <form onSubmit={(e) => {
         e.preventDefault();
         if (search) {
@@ -30,15 +29,21 @@ export default function Page({
       }}
       >
         <Box d="flex">
-
-          <Input placeholder="Search Projects" value={search} onChange={(e) => setSearch(e.target.value)} />
-          <Button fontSize="1.2rem"><UiSearch style={{
-            position: 'absolute',
-            left: '50%',
-            top: '50%',
-            transform: 'translate(-50%, -50%)',
-          }}
+          <Autocomplete
+            placeholder="Search Projects"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            mr={-4}
           />
+          <Button size="md" fontSize="xl" type="submit">
+            <UiSearch
+              style={{
+                position: 'absolute',
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%)',
+              }}
+            />
           </Button>
 
         </Box>
@@ -50,16 +55,21 @@ export default function Page({
 
     <Menu d="inline-flex">
       <form onSubmit={(e) => {
-          e.preventDefault();
-          if (search) {
-            window.location.href = `/all/1/contains=${search}`;
-          }
-        }}
+        e.preventDefault();
+        if (search) {
+          // eslint-disable-next-line no-undef
+          window.location.href = `/all/1/contains=${search}`;
+        }
+      }}
       >
         <Box d="flex">
-          <Input placeholder="Search Projects" value={search} onChange={(e) => setSearch(e.target.value)} mr={-4} />
-          <Button size="md" fontSize="xl">
-            <UiSearch style={{
+          <Autocomplete
+            placeholder="Search Projects"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)} mr={-4} />
+          <Button size="md" fontSize="xl" type="submit">
+            <UiSearch
+              style={{
                 position: 'absolute',
                 left: '50%',
                 top: '50%',
@@ -71,9 +81,7 @@ export default function Page({
       </form>
       <Button variant="ghost" key="mine" as="a" href="/mine">My Projects</Button>
       <Button variant="ghost" key="create" as="a" href="/create">New Project</Button>
-
     </Menu>,
-
   ];
 
   return (
@@ -95,7 +103,13 @@ export default function Page({
         }}
       />
       <Box position="relative" {...props}>
-        <Header darkBackground={darkHeader} gradAmount={darkHeader && 'lg'} underscore position="relative" zIndex="1000">
+        <Header
+          darkBackground={darkHeader}
+          gradAmount={darkHeader && 'lg'}
+          underscore
+          position="relative"
+          zIndex="1000"
+        >
           <SiteLogo>
             <a href="https://www.codeday.org/">
               <CodeDay withText />
